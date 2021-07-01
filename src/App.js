@@ -1,17 +1,23 @@
-import logo from "./directchat-logo.jpg";
 import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Chat from "./components/Chat";
+import Home from "./components/Home";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <input type="text" value="XYA1B" />
-        <button>JOIN</button>
-        <button>RANDOM</button>
-        <button>NEW</button>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/:id">
+          <Chat />
+        </Route>
+        <Route path="/test">
+          <Chat />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 

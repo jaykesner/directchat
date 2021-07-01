@@ -6,6 +6,10 @@
   margin-bottom: 2rem;
 }
 
+.Home-Button {
+  min-width: 200px;
+}
+
 /*
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
