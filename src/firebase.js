@@ -9,6 +9,51 @@ firebase.initializeApp(config);
 
 export const db = firebase.firestore();
 
+export const joinChat = (id) => {
+  return new Promise((resolve, reject) => {
+    console.log(`firebase func ${id}`);
+    db.collection("chats")
+      .doc(id)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log("doc exists");
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export const randomChat = () => {
+  return new Promise((resolve, reject) => {
+    db.collection("chatss")
+      .get()
+      .then((docs) => {
+        const fetchedIds = [];
+        docs.forEach((doc) => {
+          //console.log(doc.id);
+          fetchedIds.push(doc.id);
+        });
+        //console.log(fetchedIds);
+        if (fetchedIds.length > 0) {
+          const randomId =
+            fetchedIds[Math.floor(Math.random() * fetchedIds.length)];
+          resolve(randomId);
+        } else {
+          resolve(false);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 export const newChat = () => {
   const newChatId = nanoid();
   return new Promise((resolve, reject) => {
@@ -18,30 +63,15 @@ export const newChat = () => {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        //console.log(`added new chat ${docref.id}`);
         resolve(newChatId);
       })
       .catch((error) => {
         console.log("error adding new chat");
         reject(error);
       });
-    /*
-    db.collection("chats")
-      .add({
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .then((docref) => {
-        console.log(`added new chat ${docref.id}`);
-        resolve(docref.id);
-      })
-      .catch((error) => {
-        console.log("error adding new chat");
-        reject(error);
-      });
-      */
   });
 };
-export const chatMessages = (id) => {
+export const chatMessagesQuery = (id) => {
   return db
     .collection("messages")
     .where("chatId", "==", id)
