@@ -31,7 +31,7 @@ export const joinChat = (id) => {
 
 export const randomChat = () => {
   return new Promise((resolve, reject) => {
-    db.collection("chatss")
+    db.collection("chats")
       .get()
       .then((docs) => {
         const fetchedIds = [];
@@ -71,6 +71,26 @@ export const newChat = () => {
       });
   });
 };
+
+export const sendMessage = (messageText, roomId) => {
+  return new Promise((resolve, reject) => {
+    db.collection("messages")
+      .add({
+        chatId: roomId,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        text: messageText,
+      })
+      .then(() => {
+        console.log("added message");
+        resolve("added new message");
+      })
+      .catch((error) => {
+        console.log("error sending new message");
+        reject(error);
+      });
+  });
+};
+
 export const chatMessagesQuery = (id) => {
   return db
     .collection("messages")
