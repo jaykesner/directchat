@@ -11,13 +11,11 @@ export const db = firebase.firestore();
 
 export const joinChat = (id) => {
   return new Promise((resolve, reject) => {
-    console.log(`firebase func ${id}`);
     db.collection("chats")
       .doc(id)
       .get()
       .then((doc) => {
         if (doc.exists) {
-          console.log("doc exists");
           resolve(true);
         } else {
           resolve(false);
@@ -72,13 +70,15 @@ export const newChat = () => {
   });
 };
 
-export const sendMessage = (messageText, roomId) => {
+export const sendMessage = (messageInfo) => {
+  const { message, roomId, name } = messageInfo;
   return new Promise((resolve, reject) => {
     db.collection("messages")
       .add({
         chatId: roomId,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        text: messageText,
+        text: message,
+        name: name,
       })
       .then(() => {
         console.log("added message");
