@@ -1,26 +1,22 @@
 import { useParams } from "react-router";
-import { chatMessagesQuery } from "../firebase";
+import {
+  chatMessagesQuery,
+  sendMessage,
+  chatRoomQuery,
+  setTyping,
+} from "../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useEffect, useState } from "react";
-import { sendMessage } from "../firebase";
 import Name from "./Name";
 
 export default function Chat() {
   const { id } = useParams();
-  const [messages, loading, error] = useCollection(chatMessagesQuery(id));
+  const [messages, messagesLoading, messageError] = useCollection(
+    chatMessagesQuery(id)
+  );
+  const [chat, chatLoading, chatError] = useCollection(chatRoomQuery(id));
   const [message, setMessage] = useState("");
   const [hasName, setHasName] = useState(false);
-
-  const sendNewMessage = async (e) => {
-    e.preventDefault();
-    console.log("submitted message");
-    const messageInfo = {
-      message: message,
-      roomId: id,
-      name: sessionStorage.getItem("name"),
-    };
-    const newMessage = await sendMessage(messageInfo);
-  };
 
   useEffect(() => {
     const name = sessionStorage.getItem("name");
@@ -32,7 +28,30 @@ export default function Chat() {
     }
   }, []);
 
-  /*
+  useEffect(() => {
+    const name = sessionStorage.getItem("name");
+    if (name) {
+      if (message.length > 0) {
+        console.log("is typing");
+        setTyping(name, id, true);
+      } else {
+        setTyping(name, id, false);
+      }
+    }
+  });
+
+  const sendNewMessage = async (e) => {
+    e.preventDefault();
+    console.log("submitted message");
+    const messageInfo = {
+      message: message,
+      roomId: id,
+      name: sessionStorage.getItem("name"),
+    };
+    await sendMessage(messageInfo);
+  };
+
+  /* testing cleanup/effects on exit
   useEffect(
     () => () => {
       const messageInfo = {
@@ -46,7 +65,7 @@ export default function Chat() {
     []
   );
   */
-
+  /*
   useEffect(() => {
     const cleanup = () => {
       console.log("do the cleanup");
@@ -63,14 +82,17 @@ export default function Chat() {
       window.removeEventListener("beforeunload", cleanup);
     };
   }, []);
+  */
 
   return (
     <>
       {hasName ? (
         <div>
           <div>hello! url id: {id}</div>
+          {chatLoading && <div>Chat Loading</div>}
+          {chat && <div>chat room info: {JSON.stringify(chat.data())}</div>}
           <div>Messages: </div>
-          {loading && <div>Loading</div>}
+          {messagesLoading && <div>Messages Loading</div>}
           {messages &&
             messages.docs.map((doc) => (
               <div key={doc.id}>{`${doc.id} ${JSON.stringify(
@@ -86,7 +108,9 @@ export default function Chat() {
               ></input>
             </form>
           </div>
-          {error && <div>had an error! {JSON.stringify(error)}</div>}
+          {messageError && (
+            <div>had an error! {JSON.stringify(messageError)}</div>
+          )}
         </div>
       ) : (
         <Name />

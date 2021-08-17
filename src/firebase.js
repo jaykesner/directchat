@@ -91,9 +91,22 @@ export const sendMessage = (messageInfo) => {
   });
 };
 
+export const setTyping = (name, id, isTyping) => {
+  const arrayMethod = isTyping
+    ? firebase.firestore.FieldValue.arrayUnion(name)
+    : firebase.firestore.FieldValue.arrayRemove(name);
+  db.collection("chats").doc(id).update({
+    isTyping: arrayMethod,
+  });
+};
+
 export const chatMessagesQuery = (id) => {
   return db
     .collection("messages")
     .where("chatId", "==", id)
     .orderBy("createdAt", "asc");
+};
+
+export const chatRoomQuery = (id) => {
+  return db.collection("chats").doc(id);
 };
