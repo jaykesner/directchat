@@ -90,7 +90,12 @@ export default function Chat() {
         <div>
           <div>hello! url id: {id}</div>
           {chatLoading && <div>Chat Loading</div>}
-          {chat && <div>chat room info: {JSON.stringify(chat.data())}</div>}
+          {chat && (
+            <>
+              <div>chat room info: {JSON.stringify(chat.data())}</div>
+              <div>people typing: {chat.data().isTyping}</div>
+            </>
+          )}
           <div>Messages: </div>
           {messagesLoading && <div>Messages Loading</div>}
           {messages &&
