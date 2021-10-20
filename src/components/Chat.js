@@ -1,4 +1,5 @@
 import { useParams } from "react-router";
+import { useHistory } from "react-router-dom";
 import {
   chatMessagesQuery,
   sendMessage,
@@ -11,6 +12,7 @@ import Name from "./Name";
 
 export default function Chat() {
   const { id } = useParams();
+  let history = useHistory();
   const [messages, messagesLoading, messageError] = useCollection(
     chatMessagesQuery(id)
   );
@@ -93,6 +95,7 @@ export default function Chat() {
           {chat && (
             <>
               <div>chat room info: {JSON.stringify(chat.data())}</div>
+              <button onClick={() => history.push("/")}>Leave</button>
               <div>people typing: {chat.data().isTyping}</div>
             </>
           )}

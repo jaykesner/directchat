@@ -15,11 +15,15 @@ export default function Home() {
   };
 
   const joinChatById = async () => {
-    const chatRoom = await joinChat(roomId);
-    if (chatRoom) {
-      history.push(`/${roomId}`);
+    if (roomId) {
+      const chatRoom = await joinChat(roomId);
+      if (chatRoom) {
+        history.push(`/${roomId}`);
+      }
+      console.log(chatRoom);
+    } else {
+      return;
     }
-    console.log(chatRoom);
   };
 
   const joinRandomChat = async () => {
@@ -38,6 +42,7 @@ export default function Home() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <div style={{ fontSize: "12px" }}>directchat.netlify.app</div>
         <div>test room: XY1B2</div>
         <input
           type="text"
