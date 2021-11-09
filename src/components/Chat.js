@@ -96,7 +96,9 @@ export default function Chat() {
             <>
               <div>chat room info: {JSON.stringify(chat.data())}</div>
               <button onClick={() => history.push("/")}>Leave</button>
-              <div>people typing: {chat.data().isTyping}</div>
+              {chat.data().isTyping ? (
+                <div>people typing: {chat.data().isTyping}</div>
+              ) : null}
             </>
           )}
           <div>Messages: </div>
