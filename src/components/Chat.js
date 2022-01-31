@@ -5,7 +5,7 @@ import {
   sendMessage,
   chatRoomQuery,
   setTyping,
-} from "../firebase";
+} from "../api/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useEffect, useState } from "react";
 import Name from "./Name";

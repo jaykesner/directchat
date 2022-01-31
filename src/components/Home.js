@@ -1,9 +1,9 @@
-import logo from "../directchat-logo.jpg";
-import svg1 from "../chat-svg1.svg";
-import svg2 from "../chat-svg2.svg";
-import svg3 from "../chat-svg3.svg";
-import { ReactComponent as EnterIcon } from "../enter-icon.svg";
-import { newChat, joinChat, randomChat } from "../firebase";
+import logo from "../images/directchat-logo.jpg";
+import svg1 from "../images/chat-svg1.svg";
+import svg2 from "../images/chat-svg2.svg";
+import svg3 from "../images/chat-svg3.svg";
+import { ReactComponent as EnterIcon } from "../images/enter-icon.svg";
+import { newChat, joinChat, randomChat } from "../api/firebase";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import {
