@@ -112,7 +112,6 @@ export default function Home() {
         <Paper padding="xl" shadow="sm" radius="lg" withBorder>
           <Group direction="column" position="center">
             <Title sx={{ fontSize: 64 }}>Direct Chat</Title>
-
             <form onSubmit={(e) => joinChatById2(e)}>
               <TextInput
                 placeholder="XY1B2"
