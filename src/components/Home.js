@@ -24,6 +24,7 @@ import {
   SimpleGrid,
   ThemeIcon,
   UnstyledButton,
+  Paper,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
@@ -108,38 +109,41 @@ export default function Home() {
   return (
     <>
       <Center className={classes.landing}>
-        <Group direction="column" position="center">
-          <Title>Direct Chat</Title>
-          <Text size="xs">directchat.netlify.app</Text>
-          <form onSubmit={(e) => joinChatById2(e)}>
-            <TextInput
-              placeholder="XY1B2"
-              label="Room ID"
-              value={roomId}
-              onChange={(event) => setRoomId(event.target.value)}
-              rightSection={
-                <UnstyledButton onClick={() => joinChatById()}>
-                  <ThemeIcon className={classes.button}>
-                    <EnterIcon />
-                  </ThemeIcon>
-                </UnstyledButton>
-              }
-            />
-          </form>
-          <Group>
-            <Button className={classes.button} onClick={() => addNewChat()}>
-              New
-            </Button>
-            <Button
-              className={classes.button}
-              onClick={() => joinRandomChat()}
-              variant="gradient"
-              gradient={{ from: "teal", to: "blue", deg: 60 }}
-            >
-              Random
-            </Button>
+        <Paper padding="xl" shadow="sm" radius="lg" withBorder>
+          <Group direction="column" position="center">
+            <Title sx={{ fontSize: 64 }}>Direct Chat</Title>
+
+            <form onSubmit={(e) => joinChatById2(e)}>
+              <TextInput
+                placeholder="XY1B2"
+                label="Room ID"
+                value={roomId}
+                onChange={(event) => setRoomId(event.target.value)}
+                rightSection={
+                  <UnstyledButton onClick={() => joinChatById()}>
+                    <ThemeIcon className={classes.button}>
+                      <EnterIcon />
+                    </ThemeIcon>
+                  </UnstyledButton>
+                }
+              />
+            </form>
+            <Group>
+              <Button className={classes.button} onClick={() => addNewChat()}>
+                New
+              </Button>
+              <Button
+                className={classes.button}
+                onClick={() => joinRandomChat()}
+                variant="gradient"
+                gradient={{ from: "teal", to: "blue", deg: 60 }}
+              >
+                Random
+              </Button>
+            </Group>
+            <Text size="xs">directchat.netlify.app</Text>
           </Group>
-        </Group>
+        </Paper>
       </Center>
       <Center className={classes.info}>
         <Group grow direction={matches ? "row" : "column"}>
