@@ -5,6 +5,7 @@ Chat app made with [Create React App](https://github.com/facebook/create-react-a
 [directchat.netlify.app](https://directchat.netlify.app/)
 
 ## Build Structure
+
 Developing on the `develop` branch, then merging into `master` for Netlify to automatically pick up and deploy to live site.
 
 ## Available Scripts
@@ -16,21 +17,15 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## README todo
-- instructions for setup/installation
-    - firebase setup
-        - need `firebase-config.js` included in `src`
-        - firebase setup to include rule change from default
+## README todo:
 
-```
-const firebaseConfig = {
-  apiKey: "APIKEY",
-  authDomain: "AUTHDOMAIN",
-  projectId: "PROJECTID",
-  storageBucket: "STORAGEBUCKET",
-  messagingSenderId: "MESSAGINGSENDERID",
-  appId: "APPID",
-  measurementId: "MEASUREMENTID"
-};
-export default firebaseConfig;
-```
+- Instructions for setup/installation
+  - Firebase setup
+    - Create project
+    - Create web app
+    - Enable cloud firestore
+    - Change default rules
+    - Add `.env.local` to base directory
+  - Netlify setup
+    - add env variables
+    - change build command to `CI= npm run build` to avoid warnings stopping the build
