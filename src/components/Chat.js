@@ -9,6 +9,16 @@ import {
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useEffect, useState } from "react";
 import Name from "./Name";
+import {
+  Center,
+  Paper,
+  Title,
+  Badge,
+  Group,
+  TextInput,
+  Space,
+  Box,
+} from "@mantine/core";
 
 export default function Chat() {
   const { id } = useParams();
@@ -86,42 +96,65 @@ export default function Chat() {
   }, []);
   */
 
+  const TestDisplay = () => (
+    <div>
+      <div>hello! url id: {id}</div>
+      {chatLoading && <div>Chat Loading</div>}
+      {chat && (
+        <>
+          <div>chat room info: {JSON.stringify(chat.data())}</div>
+          <button onClick={() => history.push("/")}>Leave</button>
+          {chat.data().isTyping ? (
+            <div>people typing: {chat.data().isTyping}</div>
+          ) : null}
+        </>
+      )}
+      <div>Messages: </div>
+      {messagesLoading && <div>Messages Loading</div>}
+      {messages &&
+        messages.docs.map((doc) => (
+          <div key={doc.id}>{`${doc.id} ${JSON.stringify(doc.data())}`}</div>
+        ))}
+      <div>
+        <form onSubmit={(e) => sendNewMessage(e)}>
+          <input
+            type="text"
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
+          ></input>
+        </form>
+      </div>
+      {messageError && <div>had an error! {JSON.stringify(messageError)}</div>}
+    </div>
+  );
+
   return (
     <>
       {hasName ? (
-        <div>
-          <div>hello! url id: {id}</div>
-          {chatLoading && <div>Chat Loading</div>}
-          {chat && (
-            <>
-              <div>chat room info: {JSON.stringify(chat.data())}</div>
-              <button onClick={() => history.push("/")}>Leave</button>
-              {chat.data().isTyping ? (
-                <div>people typing: {chat.data().isTyping}</div>
-              ) : null}
-            </>
-          )}
-          <div>Messages: </div>
-          {messagesLoading && <div>Messages Loading</div>}
-          {messages &&
-            messages.docs.map((doc) => (
-              <div key={doc.id}>{`${doc.id} ${JSON.stringify(
-                doc.data()
-              )}`}</div>
-            ))}
-          <div>
-            <form onSubmit={(e) => sendNewMessage(e)}>
-              <input
-                type="text"
-                onChange={(e) => setMessage(e.target.value)}
-                value={message}
-              ></input>
-            </form>
-          </div>
-          {messageError && (
-            <div>had an error! {JSON.stringify(messageError)}</div>
-          )}
-        </div>
+        <>
+          <TestDisplay />
+          <Box sx={(theme) => ({ backgroundColor: theme.colors.gray[2] })}>
+            <Space h="md" />
+            <Center>
+              <Paper padding={80} shadow="lg" radius="lg" withBorder>
+                <Group direction="column" position="center">
+                  <Title>{id}</Title>
+                  <Badge size="xl">Message Text</Badge>
+                </Group>
+              </Paper>
+            </Center>
+            <Space h="md" />
+            <Center>
+              <Group grow>
+                <TextInput
+                  placeholder="Type a message.."
+                  radius="xl"
+                  size="lg"
+                />
+              </Group>
+            </Center>
+          </Box>
+        </>
       ) : (
         <Name />
       )}

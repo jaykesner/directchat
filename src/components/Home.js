@@ -109,7 +109,7 @@ export default function Home() {
   return (
     <>
       <Center className={classes.landing}>
-        <Paper padding="xl" shadow="sm" radius="lg" withBorder>
+        <Paper padding={80} shadow="lg" radius="lg" withBorder>
           <Group direction="column" position="center">
             <Title sx={{ fontSize: 64 }}>Direct Chat</Title>
             <form onSubmit={(e) => joinChatById2(e)}>
