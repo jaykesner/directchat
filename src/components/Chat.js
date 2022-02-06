@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import {
@@ -7,7 +8,6 @@ import {
   setTyping,
 } from "../api/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { useEffect, useState } from "react";
 import Name from "./Name";
 import {
   Center,
@@ -18,6 +18,12 @@ import {
   TextInput,
   Space,
   Box,
+  Spoiler,
+  Button,
+  Container,
+  Text,
+  Skeleton,
+  ScrollArea,
 } from "@mantine/core";
 
 export default function Chat() {
@@ -29,6 +35,7 @@ export default function Chat() {
   const [chat, chatLoading, chatError] = useCollection(chatRoomQuery(id));
   const [message, setMessage] = useState("");
   const [hasName, setHasName] = useState(false);
+  const viewport = useRef(null);
 
   useEffect(() => {
     const name = sessionStorage.getItem("name");
@@ -43,9 +50,18 @@ export default function Chat() {
   useEffect(() => {
     const name = sessionStorage.getItem("name");
     if (name) {
+      /*
+      if (viewport !== null) {
+        viewport.current.scrollTo({
+          top: viewport.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+      */
+
       if (message.length > 0) {
         console.log("is typing");
-        setTyping(name, id, true);
+        setTyping(name, id, true);vvvvvvvvvvvvvvvvvvv
       } else {
         setTyping(name, id, false);
       }
@@ -61,6 +77,7 @@ export default function Chat() {
       name: sessionStorage.getItem("name"),
     };
     await sendMessage(messageInfo);
+    setMessage("");
   };
 
   /* testing cleanup/effects on exit
@@ -128,33 +145,79 @@ export default function Chat() {
     </div>
   );
 
+  const SkeletonText = () => (
+    <Group direction="column" spacing="xs" sx={{ width: "100%" }}>
+      <Group spacing="xs">
+        <Skeleton width={75} height={24} />
+        <Skeleton width={100} height={16} sx={{ alignSelf: "flex-end" }} />
+      </Group>
+      <Skeleton height={25} />
+      <Skeleton height={25} />
+    </Group>
+  );
+
   return (
     <>
       {hasName ? (
-        <>
-          <TestDisplay />
-          <Box sx={(theme) => ({ backgroundColor: theme.colors.gray[2] })}>
-            <Space h="md" />
-            <Center>
-              <Paper padding={80} shadow="lg" radius="lg" withBorder>
-                <Group direction="column" position="center">
-                  <Title>{id}</Title>
-                  <Badge size="xl">Message Text</Badge>
-                </Group>
+        <Box
+          sx={(theme) => ({
+            backgroundColor: theme.colors.gray[2],
+            height: "100vh",
+          })}
+        >
+          <Group direction="column" spacing="xl" position="center">
+            <Title sx={{ fontSize: 64 }}>{id}</Title>
+            <Group>
+              <Button onClick={() => history.push("/")} radius="xl" size="lg">
+                Leave
+              </Button>
+            </Group>
+            <Container sx={{ width: "100%" }}>
+              <Paper shadow="lg" radius="lg">
+                <Container>
+                  <Space h="xs" />
+                  <ScrollArea
+                    sx={{ height: 400 }}
+                    offsetScrollbars
+                    viewportRef={viewport}
+                  >
+                    <Group direction="column">
+                      {messagesLoading && <SkeletonText />}
+                      {messages &&
+                        messages.docs.map((doc) => (
+                          <Group direction="column" spacing={0} key={doc.id}>
+                            <Group spacing="xs">
+                              <Text weight={700}>{doc.data().name}</Text>
+                              <Text
+                                color="dimmed"
+                                size="xs"
+                                sx={{ paddingTop: 2 }}
+                              >
+                                Today at 12:24 PM
+                              </Text>
+                            </Group>
+                            <Text>{doc.data().text}</Text>
+                          </Group>
+                        ))}
+                    </Group>
+                  </ScrollArea>
+                  <Space h="xs" />
+                </Container>
               </Paper>
-            </Center>
-            <Space h="md" />
-            <Center>
-              <Group grow>
+            </Container>
+            <Container sx={{ width: "100%", marginBottom: 100 }}>
+              <form onSubmit={(e) => sendNewMessage(e)}>
                 <TextInput
                   placeholder="Type a message.."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   radius="xl"
                   size="lg"
                 />
-              </Group>
-            </Center>
-          </Box>
-        </>
+              </form>
+            </Container>
+          </Group>
+        </Box>
       ) : (
         <Name />
       )}
