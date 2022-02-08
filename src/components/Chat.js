@@ -24,6 +24,7 @@ import {
   Text,
   Skeleton,
   ScrollArea,
+  Modal,
 } from "@mantine/core";
 
 export default function Chat() {
@@ -35,6 +36,7 @@ export default function Chat() {
   const [chat, chatLoading, chatError] = useCollection(chatRoomQuery(id));
   const [message, setMessage] = useState("");
   const [hasName, setHasName] = useState(false);
+  const [name, setName] = useState("");
   const viewport = useRef(null);
 
   useEffect(() => {
@@ -48,20 +50,23 @@ export default function Chat() {
   }, []);
 
   useEffect(() => {
+    //console.log(JSON.stringify(messages));
+    if (!messagesLoading) {
+      viewport.current.scrollTo({
+        top: viewport.current.scrollHeight,
+        behavior: "smooth",
+      });
+      console.log("SCROLLING");
+      console.log(JSON.stringify(messages.docs[0].data()));
+    }
+  }, [messagesLoading, messages]);
+
+  useEffect(() => {
     const name = sessionStorage.getItem("name");
     if (name) {
-      /*
-      if (viewport !== null) {
-        viewport.current.scrollTo({
-          top: viewport.current.scrollHeight,
-          behavior: "smooth",
-        });
-      }
-      */
-
       if (message.length > 0) {
-        console.log("is typing");
-        setTyping(name, id, true);vvvvvvvvvvvvvvvvvvv
+        //console.log("is typing");
+        setTyping(name, id, true);
       } else {
         setTyping(name, id, false);
       }
@@ -78,6 +83,12 @@ export default function Chat() {
     };
     await sendMessage(messageInfo);
     setMessage("");
+  };
+
+  const applySessionName = (e) => {
+    e.preventDefault();
+    sessionStorage.setItem("name", name);
+    setHasName(true);
   };
 
   /* testing cleanup/effects on exit
@@ -157,70 +168,80 @@ export default function Chat() {
   );
 
   return (
-    <>
-      {hasName ? (
-        <Box
-          sx={(theme) => ({
-            backgroundColor: theme.colors.gray[2],
-            height: "100vh",
-          })}
-        >
-          <Group direction="column" spacing="xl" position="center">
-            <Title sx={{ fontSize: 64 }}>{id}</Title>
-            <Group>
-              <Button onClick={() => history.push("/")} radius="xl" size="lg">
-                Leave
-              </Button>
-            </Group>
-            <Container sx={{ width: "100%" }}>
-              <Paper shadow="lg" radius="lg">
-                <Container>
-                  <Space h="xs" />
-                  <ScrollArea
-                    sx={{ height: 400 }}
-                    offsetScrollbars
-                    viewportRef={viewport}
-                  >
-                    <Group direction="column">
-                      {messagesLoading && <SkeletonText />}
-                      {messages &&
-                        messages.docs.map((doc) => (
-                          <Group direction="column" spacing={0} key={doc.id}>
-                            <Group spacing="xs">
-                              <Text weight={700}>{doc.data().name}</Text>
-                              <Text
-                                color="dimmed"
-                                size="xs"
-                                sx={{ paddingTop: 2 }}
-                              >
-                                Today at 12:24 PM
-                              </Text>
-                            </Group>
-                            <Text>{doc.data().text}</Text>
-                          </Group>
-                        ))}
-                    </Group>
-                  </ScrollArea>
-                  <Space h="xs" />
-                </Container>
-              </Paper>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: theme.colors.gray[2],
+        height: "100vh",
+      })}
+    >
+      <Modal opened={!hasName} hideCloseButton onClose={() => setHasName(true)}>
+        <form onSubmit={(e) => applySessionName(e)}>
+          <TextInput
+            data-autofocus
+            placeholder="Your name"
+            label="What's your name?"
+            required
+            radius="xl"
+            size="lg"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </form>
+      </Modal>
+      <Group direction="column" spacing="xl" position="center">
+        <Title sx={{ fontSize: 64 }}>{id}</Title>
+        <Group>
+          <Button onClick={() => history.push("/")} radius="xl" size="lg">
+            Leave
+          </Button>
+        </Group>
+        <Container sx={{ width: "100%" }}>
+          <Paper shadow="lg" radius="lg">
+            <Container>
+              <Space h="xs" />
+              <ScrollArea
+                sx={{ height: 380 }}
+                offsetScrollbars
+                viewportRef={viewport}
+              >
+                <Group direction="column">
+                  {messagesLoading && (
+                    <>
+                      <SkeletonText />
+                      <SkeletonText />
+                      <SkeletonText />
+                    </>
+                  )}
+                  {messages &&
+                    messages.docs.map((doc) => (
+                      <Group direction="column" spacing={0} key={doc.id}>
+                        <Group spacing="xs">
+                          <Text weight={700}>{doc.data().name}</Text>
+                          <Text color="dimmed" size="xs" sx={{ paddingTop: 2 }}>
+                            Today at 12:24 PM
+                          </Text>
+                        </Group>
+                        <Text>{doc.data().text}</Text>
+                      </Group>
+                    ))}
+                </Group>
+              </ScrollArea>
+              <Space h="xs" />
             </Container>
-            <Container sx={{ width: "100%", marginBottom: 100 }}>
-              <form onSubmit={(e) => sendNewMessage(e)}>
-                <TextInput
-                  placeholder="Type a message.."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  radius="xl"
-                  size="lg"
-                />
-              </form>
-            </Container>
-          </Group>
-        </Box>
-      ) : (
-        <Name />
-      )}
-    </>
+          </Paper>
+        </Container>
+        <Container sx={{ width: "100%", paddingBottom: 10 }}>
+          <form onSubmit={(e) => sendNewMessage(e)}>
+            <TextInput
+              placeholder="Type a message.."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              radius="xl"
+              size="lg"
+            />
+          </form>
+        </Container>
+      </Group>
+    </Box>
   );
 }
