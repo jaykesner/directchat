@@ -41,23 +41,15 @@ export default function Chat() {
 
   useEffect(() => {
     const name = sessionStorage.getItem("name");
-    if (name) {
-      console.log("found name");
-      setHasName(true);
-    } else {
-      console.log("didn't find name");
-    }
+    if (name) setHasName(true);
   }, []);
 
   useEffect(() => {
-    //console.log(JSON.stringify(messages));
     if (!messagesLoading) {
       viewport.current.scrollTo({
         top: viewport.current.scrollHeight,
-        behavior: "smooth",
+        behavior: "auto",
       });
-      console.log("SCROLLING");
-      console.log(JSON.stringify(messages.docs[0].data()));
     }
   }, [messagesLoading, messages]);
 
