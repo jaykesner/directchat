@@ -8,7 +8,6 @@ import {
   setTyping,
 } from "../api/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
-import Name from "./Name";
 import {
   Center,
   Paper,
@@ -35,14 +34,9 @@ export default function Chat() {
   );
   const [chat, chatLoading, chatError] = useCollection(chatRoomQuery(id));
   const [message, setMessage] = useState("");
-  const [hasName, setHasName] = useState(false);
-  const [name, setName] = useState("");
+  const [nameInput, setNameInput] = useState("");
+  const [name, setName] = useState(sessionStorage.getItem("name"));
   const viewport = useRef(null);
-
-  useEffect(() => {
-    const name = sessionStorage.getItem("name");
-    if (name) setHasName(true);
-  }, []);
 
   useEffect(() => {
     if (!messagesLoading) {
@@ -54,10 +48,8 @@ export default function Chat() {
   }, [messagesLoading, messages]);
 
   useEffect(() => {
-    const name = sessionStorage.getItem("name");
     if (name) {
       if (message.length > 0) {
-        //console.log("is typing");
         setTyping(name, id, true);
       } else {
         setTyping(name, id, false);
@@ -67,20 +59,21 @@ export default function Chat() {
 
   const sendNewMessage = async (e) => {
     e.preventDefault();
-    console.log("submitted message");
-    const messageInfo = {
-      message: message,
-      roomId: id,
-      name: sessionStorage.getItem("name"),
-    };
-    await sendMessage(messageInfo);
+    if (name) {
+      const messageInfo = {
+        message: message,
+        roomId: id,
+        name: name,
+      };
+      await sendMessage(messageInfo);
+    }
     setMessage("");
   };
 
   const applySessionName = (e) => {
     e.preventDefault();
-    sessionStorage.setItem("name", name);
-    setHasName(true);
+    sessionStorage.setItem("name", nameInput);
+    setName(nameInput);
   };
 
   /* testing cleanup/effects on exit
@@ -166,7 +159,7 @@ export default function Chat() {
         height: "100vh",
       })}
     >
-      <Modal opened={!hasName} hideCloseButton onClose={() => setHasName(true)}>
+      <Modal opened={!name} hideCloseButton>
         <form onSubmit={(e) => applySessionName(e)}>
           <TextInput
             data-autofocus
@@ -175,8 +168,8 @@ export default function Chat() {
             required
             radius="xl"
             size="lg"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
           />
         </form>
       </Modal>
