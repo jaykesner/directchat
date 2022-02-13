@@ -76,6 +76,19 @@ export default function Chat() {
     setName(nameInput);
   };
 
+  const formatMessageDate = (date) => {
+    if (date) {
+      const month = date.getMonth() + 1;
+      const minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+      const seconds = (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
+
+      const formattedDate = `${month}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${minutes}:${seconds}`;
+      return formattedDate;
+    } else {
+      return "nodate";
+    }
+  };
+
   /* testing cleanup/effects on exit
   useEffect(
     () => () => {
@@ -201,9 +214,11 @@ export default function Chat() {
                     messages.docs.map((doc) => (
                       <Group direction="column" spacing={0} key={doc.id}>
                         <Group spacing="xs">
-                          <Text weight={700}>{doc.data().name}</Text>
+                          <Text weight={700}>
+                            {doc.data().name ? doc.data().name : "NoName"}
+                          </Text>
                           <Text color="dimmed" size="xs" sx={{ paddingTop: 2 }}>
-                            Today at 12:24 PM
+                            {formatMessageDate(doc.data().createdAt.toDate())}
                           </Text>
                         </Group>
                         <Text>{doc.data().text}</Text>

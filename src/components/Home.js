@@ -30,15 +30,16 @@ import { useMediaQuery } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
   landing: {
-    height: "80vh",
+    height: "738px",
   },
   info: {
-    backgroundColor: theme.colors.gray[2],
-    height: "45vh",
+    // testing mantine theme functions
+    backgroundColor: theme.fn.lighten(theme.colors.gray[5], 0.6),
+    height: "378px",
   },
   info2: {
-    backgroundColor: theme.colors.gray[3],
-    height: "45vh",
+    backgroundColor: theme.fn.lighten(theme.colors.gray[5], 0.5),
+    height: "378px",
   },
   button: {
     "&:hover": {
@@ -46,8 +47,8 @@ const useStyles = createStyles((theme) => ({
     },
   },
   footer: {
-    backgroundColor: theme.colors.gray[6],
-    height: "45vh",
+    backgroundColor: theme.fn.lighten(theme.colors.gray[5], 0.2),
+    height: "400px",
   },
   test1: {
     backgroundColor: theme.colors.red[1],
@@ -109,40 +110,57 @@ export default function Home() {
   return (
     <>
       <Center className={classes.landing}>
-        <Paper padding={80} shadow="lg" radius="lg" withBorder>
-          <Group direction="column" position="center">
-            <Title sx={{ fontSize: 64 }}>Direct Chat</Title>
-            <form onSubmit={(e) => joinChatById2(e)}>
-              <TextInput
-                placeholder="XY1B2"
-                label="Room ID"
-                value={roomId}
-                onChange={(event) => setRoomId(event.target.value)}
-                rightSection={
-                  <UnstyledButton onClick={() => joinChatById()}>
-                    <ThemeIcon className={classes.button}>
-                      <EnterIcon />
-                    </ThemeIcon>
-                  </UnstyledButton>
-                }
-              />
-            </form>
-            <Group>
-              <Button className={classes.button} onClick={() => addNewChat()}>
-                New
-              </Button>
-              <Button
-                className={classes.button}
-                onClick={() => joinRandomChat()}
-                variant="gradient"
-                gradient={{ from: "teal", to: "blue", deg: 60 }}
-              >
-                Random
-              </Button>
+        <Container>
+          <Paper padding={80} shadow="lg" radius="lg" withBorder>
+            <Group direction="column" position="center">
+              <Title sx={{ fontSize: 48 }}>Direct Chat</Title>
+              <form onSubmit={(e) => joinChatById2(e)}>
+                <TextInput
+                  placeholder="XY1B2"
+                  label="Room ID"
+                  size="xl"
+                  radius="xl"
+                  value={roomId}
+                  onChange={(event) => setRoomId(event.target.value)}
+                  rightSection={
+                    <UnstyledButton
+                      onClick={() => joinChatById()}
+                      sx={{ paddingRight: "16px" }}
+                    >
+                      <ThemeIcon
+                        size="xl"
+                        radius="xl"
+                        className={classes.button}
+                      >
+                        <EnterIcon />
+                      </ThemeIcon>
+                    </UnstyledButton>
+                  }
+                />
+              </form>
+              <Group>
+                <Button
+                  className={classes.button}
+                  size="xl"
+                  radius="xl"
+                  onClick={() => addNewChat()}
+                >
+                  New
+                </Button>
+                <Button
+                  className={classes.button}
+                  onClick={() => joinRandomChat()}
+                  variant="gradient"
+                  size="xl"
+                  radius="xl"
+                  gradient={{ from: "teal", to: "blue", deg: 60 }}
+                >
+                  Random
+                </Button>
+              </Group>
             </Group>
-            <Text size="xs">directchat.netlify.app</Text>
-          </Group>
-        </Paper>
+          </Paper>
+        </Container>
       </Center>
       <Center className={classes.info}>
         <Group grow direction={matches ? "row" : "column"}>
