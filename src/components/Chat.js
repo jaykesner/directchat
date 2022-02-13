@@ -218,7 +218,9 @@ export default function Chat() {
                             {doc.data().name ? doc.data().name : "NoName"}
                           </Text>
                           <Text color="dimmed" size="xs" sx={{ paddingTop: 2 }}>
-                            {formatMessageDate(doc.data().createdAt.toDate())}
+                            {doc.data().createdAt
+                              ? formatMessageDate(doc.data().createdAt.toDate())
+                              : "NoDate"}
                           </Text>
                         </Group>
                         <Text>{doc.data().text}</Text>
