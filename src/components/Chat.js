@@ -4,20 +4,17 @@ import { useHistory } from "react-router-dom";
 import {
   chatMessagesQuery,
   sendMessage,
-  chatRoomQuery,
+  //chatRoomQuery,
   setTyping,
 } from "../api/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import {
-  Center,
   Paper,
   Title,
-  Badge,
   Group,
   TextInput,
   Space,
   Box,
-  Spoiler,
   Button,
   Container,
   Text,
@@ -25,18 +22,20 @@ import {
   ScrollArea,
   Modal,
 } from "@mantine/core";
+import { useScrollLock } from "@mantine/hooks";
 
 export default function Chat() {
   const { id } = useParams();
   let history = useHistory();
-  const [messages, messagesLoading, messageError] = useCollection(
-    chatMessagesQuery(id)
-  );
-  const [chat, chatLoading, chatError] = useCollection(chatRoomQuery(id));
+  const [messages, messagesLoading] = useCollection(chatMessagesQuery(id));
+  //const [chat, chatLoading] = useCollection(chatRoomQuery(id));
   const [message, setMessage] = useState("");
   const [nameInput, setNameInput] = useState("");
   const [name, setName] = useState(sessionStorage.getItem("name"));
+  const [opened, setOpened] = useState(true);
   const viewport = useRef(null);
+
+  useScrollLock(true);
 
   useEffect(() => {
     if (!messagesLoading) {
@@ -57,6 +56,25 @@ export default function Chat() {
     }
   });
 
+  useEffect(() => {
+    if (!opened) {
+      if (!name) {
+        if (nameInput) {
+          sessionStorage.setItem("name", nameInput);
+          setName(nameInput);
+          setOpened(false);
+        } else {
+          setOpened(true);
+        }
+      }
+    }
+    if (opened) {
+      if (name) {
+        setOpened(false);
+      }
+    }
+  }, [opened, name, nameInput]);
+
   const sendNewMessage = async (e) => {
     e.preventDefault();
     if (name) {
@@ -70,10 +88,11 @@ export default function Chat() {
     setMessage("");
   };
 
-  const applySessionName = (e) => {
+  const nameFormSubmit = (e) => {
     e.preventDefault();
     sessionStorage.setItem("name", nameInput);
     setName(nameInput);
+    setOpened(false);
   };
 
   const formatMessageDate = (date) => {
@@ -85,7 +104,7 @@ export default function Chat() {
       const formattedDate = `${month}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${minutes}:${seconds}`;
       return formattedDate;
     } else {
-      return "nodate";
+      return <div>name</div>;
     }
   };
 
@@ -122,6 +141,7 @@ export default function Chat() {
   }, []);
   */
 
+  /*
   const TestDisplay = () => (
     <div>
       <div>hello! url id: {id}</div>
@@ -153,6 +173,7 @@ export default function Chat() {
       {messageError && <div>had an error! {JSON.stringify(messageError)}</div>}
     </div>
   );
+  */
 
   const SkeletonText = () => (
     <Group direction="column" spacing="xs" sx={{ width: "100%" }}>
@@ -166,24 +187,29 @@ export default function Chat() {
   );
 
   return (
-    <Box
-      sx={(theme) => ({
-        backgroundColor: theme.colors.gray[2],
-        height: "100vh",
-      })}
-    >
-      <Modal opened={!name} hideCloseButton>
-        <form onSubmit={(e) => applySessionName(e)}>
-          <TextInput
-            data-autofocus
-            placeholder="Your name"
-            label="What's your name?"
-            required
-            radius="xl"
-            size="lg"
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value)}
-          />
+    <Box>
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        hideCloseButton
+        centered
+      >
+        <form onSubmit={(e) => nameFormSubmit(e)} autoComplete="off">
+          <Group direction="column" grow>
+            <TextInput
+              data-autofocus
+              placeholder="Your name"
+              label="What's your name?"
+              required
+              radius="xl"
+              size="lg"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+            />
+            <Button type="submit" radius="xl" size="lg">
+              Join {nameInput ? `as ${nameInput}` : null}
+            </Button>
+          </Group>
         </form>
       </Modal>
       <Group direction="column" spacing="xl" position="center">
@@ -218,9 +244,11 @@ export default function Chat() {
                             {doc.data().name ? doc.data().name : "NoName"}
                           </Text>
                           <Text color="dimmed" size="xs" sx={{ paddingTop: 2 }}>
-                            {doc.data().createdAt
-                              ? formatMessageDate(doc.data().createdAt.toDate())
-                              : "NoDate"}
+                            {doc.data().createdAt ? (
+                              formatMessageDate(doc.data().createdAt.toDate())
+                            ) : (
+                              <Skeleton> 2/15/2022 15:53:00</Skeleton>
+                            )}
                           </Text>
                         </Group>
                         <Text>{doc.data().text}</Text>
@@ -232,8 +260,8 @@ export default function Chat() {
             </Container>
           </Paper>
         </Container>
-        <Container sx={{ width: "100%", paddingBottom: 10 }}>
-          <form onSubmit={(e) => sendNewMessage(e)}>
+        <Container sx={{ width: "100%" }}>
+          <form onSubmit={(e) => sendNewMessage(e)} autoComplete="off">
             <TextInput
               placeholder="Type a message.."
               value={message}

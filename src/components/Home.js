@@ -1,6 +1,4 @@
-import logo from "../images/directchat-logo.jpg";
 import svg1 from "../images/chat-svg1.svg";
-import svg2 from "../images/chat-svg2.svg";
 import svg3 from "../images/chat-svg3.svg";
 import { ReactComponent as EnterIcon } from "../images/enter-icon.svg";
 import { newChat, joinChat, randomChat } from "../api/firebase";
@@ -16,12 +14,7 @@ import {
   TextInput,
   Center,
   Image,
-  Grid,
-  Col,
-  AppShell,
-  Header,
   Box,
-  SimpleGrid,
   ThemeIcon,
   UnstyledButton,
   Paper,
@@ -33,28 +26,25 @@ const useStyles = createStyles((theme) => ({
     height: "738px",
   },
   info: {
-    // testing mantine theme functions
-    backgroundColor: theme.fn.lighten(theme.colors.gray[5], 0.6),
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[5]
+        : theme.colors.gray[3],
     height: "378px",
   },
   info2: {
-    backgroundColor: theme.fn.lighten(theme.colors.gray[5], 0.5),
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[4]
+        : theme.colors.gray[4],
     height: "378px",
   },
-  button: {
-    "&:hover": {
-      backgroundColor: theme.colors.blue[5],
-    },
-  },
   footer: {
-    backgroundColor: theme.fn.lighten(theme.colors.gray[5], 0.2),
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[3]
+        : theme.colors.gray[5],
     height: "400px",
-  },
-  test1: {
-    backgroundColor: theme.colors.red[1],
-  },
-  test2: {
-    backgroundColor: theme.colors.red[2],
   },
 }));
 
@@ -111,10 +101,10 @@ export default function Home() {
     <>
       <Center className={classes.landing}>
         <Container>
-          <Paper padding={80} shadow="lg" radius="lg" withBorder>
+          <Paper padding="xl" shadow="lg" radius="lg" withBorder>
             <Group direction="column" position="center">
               <Title sx={{ fontSize: 48 }}>Direct Chat</Title>
-              <form onSubmit={(e) => joinChatById2(e)}>
+              <form onSubmit={(e) => joinChatById2(e)} autoComplete="off">
                 <TextInput
                   placeholder="XY1B2"
                   label="Room ID"
@@ -139,16 +129,10 @@ export default function Home() {
                 />
               </form>
               <Group>
-                <Button
-                  className={classes.button}
-                  size="xl"
-                  radius="xl"
-                  onClick={() => addNewChat()}
-                >
+                <Button size="xl" radius="xl" onClick={() => addNewChat()}>
                   New
                 </Button>
                 <Button
-                  className={classes.button}
                   onClick={() => joinRandomChat()}
                   variant="gradient"
                   size="xl"
