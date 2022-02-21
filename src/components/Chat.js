@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import {
   chatMessagesQuery,
   sendMessage,
-  //chatRoomQuery,
+  chatRoomQuery,
   setTyping,
 } from "../api/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -21,6 +21,7 @@ import {
   Skeleton,
   ScrollArea,
   Modal,
+  Loader,
 } from "@mantine/core";
 import { useScrollLock } from "@mantine/hooks";
 
@@ -28,7 +29,7 @@ export default function Chat() {
   const { id } = useParams();
   let history = useHistory();
   const [messages, messagesLoading] = useCollection(chatMessagesQuery(id));
-  //const [chat, chatLoading] = useCollection(chatRoomQuery(id));
+  const [chat] = useCollection(chatRoomQuery(id));
   const [message, setMessage] = useState("");
   const [nameInput, setNameInput] = useState("");
   const [name, setName] = useState(sessionStorage.getItem("name"));
@@ -108,72 +109,22 @@ export default function Chat() {
     }
   };
 
-  /* testing cleanup/effects on exit
-  useEffect(
-    () => () => {
-      const messageInfo = {
-        message: "testing this again",
-        roomId: id,
-        name: "jimbo2",
-      };
-      sendMessage(messageInfo);
-      console.log("idk");
-    },
-    []
-  );
-  */
-  /*
-  useEffect(() => {
-    const cleanup = () => {
-      console.log("do the cleanup");
-      const messageInfo = {
-        message: "PAGE CLOSED TEST",
-        roomId: "XY1B2",
-        name: "pageclosedtestname",
-      };
-      //sendMessage(messageInfo);
-    };
-
-    window.addEventListener("beforeunload", cleanup);
-    return () => {
-      window.removeEventListener("beforeunload", cleanup);
-    };
-  }, []);
-  */
-
-  /*
-  const TestDisplay = () => (
-    <div>
-      <div>hello! url id: {id}</div>
-      {chatLoading && <div>Chat Loading</div>}
-      {chat && (
-        <>
-          <div>chat room info: {JSON.stringify(chat.data())}</div>
-          <button onClick={() => history.push("/")}>Leave</button>
-          {chat.data().isTyping ? (
-            <div>people typing: {chat.data().isTyping}</div>
-          ) : null}
-        </>
-      )}
-      <div>Messages: </div>
-      {messagesLoading && <div>Messages Loading</div>}
-      {messages &&
-        messages.docs.map((doc) => (
-          <div key={doc.id}>{`${doc.id} ${JSON.stringify(doc.data())}`}</div>
-        ))}
-      <div>
-        <form onSubmit={(e) => sendNewMessage(e)}>
-          <input
-            type="text"
-            onChange={(e) => setMessage(e.target.value)}
-            value={message}
-          ></input>
-        </form>
-      </div>
-      {messageError && <div>had an error! {JSON.stringify(messageError)}</div>}
-    </div>
-  );
-  */
+  const TypingMessageDisplay = () => {
+    const showTypingIndicator = chat.data().isTyping.length > 0;
+    if (showTypingIndicator) {
+      return (
+        <Group spacing={5} style={{ paddingLeft: 10, paddingTop: 2 }}>
+          <Loader size="sm" variant="dots" />
+          <Text size="sm" weight={700}>
+            {chat && chat.data().isTyping}
+          </Text>
+          <Text size="sm"> is typing...</Text>
+        </Group>
+      );
+    } else {
+      return null;
+    }
+  };
 
   const SkeletonText = () => (
     <Group direction="column" spacing="xs" sx={{ width: "100%" }}>
@@ -270,6 +221,7 @@ export default function Chat() {
               size="lg"
             />
           </form>
+          {chat && chat.data().isTyping && <TypingMessageDisplay />}
         </Container>
       </Group>
     </Box>
