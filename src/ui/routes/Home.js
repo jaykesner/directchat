@@ -1,7 +1,7 @@
-import svg1 from "../images/chat-svg1.svg";
-import svg3 from "../images/chat-svg3.svg";
-import { ReactComponent as EnterIcon } from "../images/enter-icon.svg";
-import { newChat, joinChat, randomChat } from "../api/firebase";
+import svg1 from "../../images/chat-svg1.svg";
+import svg3 from "../../images/chat-svg3.svg";
+import { ReactComponent as EnterIcon } from "../../images/enter-icon.svg";
+import { newChat, joinChat, randomChat } from "../../api/firebase";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import {

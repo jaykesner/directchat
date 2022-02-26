@@ -1,7 +1,7 @@
 import { Global, MantineProvider } from "@mantine/core";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Chat from "./Chat";
-import Home from "./Home";
+import Chat from "./routes/Chat";
+import Home from "./routes/Home";
 
 export default function App() {
   return (
