@@ -14,7 +14,6 @@ import {
   Title,
   Group,
   TextInput,
-  Space,
   Button,
   Container,
   Text,
@@ -106,7 +105,7 @@ export default function Chat() {
   };
 
   return (
-    <>
+    <Group direction="column" spacing="xl" position="center">
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
@@ -132,75 +131,69 @@ export default function Chat() {
           </Group>
         </form>
       </Modal>
-      <Group direction="column" spacing="xl" position="center">
+      <Group direction="column" position="center">
         <Title sx={{ fontSize: 64 }}>{id}</Title>
-        <Group>
-          <Button onClick={() => history.push("/")} radius="xl" size="lg">
-            Leave
-          </Button>
-        </Group>
-        <Container sx={{ width: "100%" }}>
-          <Paper shadow="lg" radius="lg">
-            <Container>
-              <Space h="xs" />
-              <ScrollArea
-                sx={{ height: 380 }}
-                offsetScrollbars
-                viewportRef={viewport}
-              >
-                <Group direction="column">
-                  {messagesLoading && (
-                    <>
-                      <MessageSkeleton />
-                      <MessageSkeleton />
-                      <MessageSkeleton />
-                    </>
-                  )}
-                  {messages &&
-                    messages.docs.map((doc) => (
-                      <Group direction="column" spacing={0} key={doc.id}>
-                        <Group spacing="xs">
-                          <Text weight={700}>
-                            {doc.data().name ? doc.data().name : "NoName"}
-                          </Text>
-                          <Text color="dimmed" size="xs" sx={{ paddingTop: 2 }}>
-                            {doc.data().createdAt ? (
-                              formatMessageDate(doc.data().createdAt.toDate())
-                            ) : (
-                              <Skeleton> 2/15/2022 15:53:00</Skeleton>
-                            )}
-                          </Text>
-                        </Group>
-                        <Text>{doc.data().text}</Text>
-                      </Group>
-                    ))}
-                </Group>
-              </ScrollArea>
-              <Space h="xs" />
-            </Container>
-          </Paper>
-        </Container>
-        <Container sx={{ width: "100%" }}>
-          <form onSubmit={(e) => sendNewMessage(e)} autoComplete="off">
-            <TextInput
-              placeholder="Type a message.."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              radius="xl"
-              size="lg"
-            />
-          </form>
-          {chat && chat.data().isTyping && chat.data().isTyping.length > 0 && (
-            <Group spacing={5} style={{ paddingLeft: 10, paddingTop: 2 }}>
-              <Loader size="sm" variant="dots" />
-              <Text size="sm" weight={700}>
-                {chat && chat.data().isTyping}
-              </Text>
-              <Text size="sm"> is typing...</Text>
-            </Group>
-          )}
-        </Container>
+        <Button onClick={() => history.push("/")} radius="xl" size="lg">
+          Leave
+        </Button>
       </Group>
-    </>
+      <Container sx={{ width: "100%" }}>
+        <Paper padding="sm" shadow="lg" radius="lg">
+          <ScrollArea
+            sx={{ height: 380 }}
+            offsetScrollbars
+            viewportRef={viewport}
+          >
+            <Group direction="column">
+              {messagesLoading && (
+                <>
+                  <MessageSkeleton />
+                  <MessageSkeleton />
+                  <MessageSkeleton />
+                </>
+              )}
+              {messages &&
+                messages.docs.map((doc) => (
+                  <Group direction="column" spacing={0} key={doc.id}>
+                    <Group spacing="xs">
+                      <Text weight={700}>
+                        {doc.data().name ? doc.data().name : "NoName"}
+                      </Text>
+                      <Text color="dimmed" size="xs" sx={{ paddingTop: 2 }}>
+                        {doc.data().createdAt ? (
+                          formatMessageDate(doc.data().createdAt.toDate())
+                        ) : (
+                          <Skeleton> 2/15/2022 15:53:00</Skeleton>
+                        )}
+                      </Text>
+                    </Group>
+                    <Text>{doc.data().text}</Text>
+                  </Group>
+                ))}
+            </Group>
+          </ScrollArea>
+        </Paper>
+      </Container>
+      <Container sx={{ width: "100%" }}>
+        <form onSubmit={(e) => sendNewMessage(e)} autoComplete="off">
+          <TextInput
+            placeholder="Type a message.."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            radius="xl"
+            size="lg"
+          />
+        </form>
+        {chat && chat.data().isTyping && chat.data().isTyping.length > 0 && (
+          <Group spacing={5} style={{ paddingLeft: 10, paddingTop: 2 }}>
+            <Loader size="sm" variant="dots" />
+            <Text size="sm" weight={700}>
+              {chat && chat.data().isTyping}
+            </Text>
+            <Text size="sm"> is typing...</Text>
+          </Group>
+        )}
+      </Container>
+    </Group>
   );
 }
