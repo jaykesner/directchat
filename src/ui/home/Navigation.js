@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { ReactComponent as EnterIcon } from "../../images/enter-icon.svg";
 
-export default function HomeActions() {
+export default function Navigation() {
   let history = useHistory();
   const [roomId, setRoomId] = useState("");
 

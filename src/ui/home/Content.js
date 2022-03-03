@@ -1,7 +1,7 @@
 import { useMediaQuery } from "@mantine/hooks";
 import { Title, Group, Text, Image, Box } from "@mantine/core";
 
-export default function HomeInfo({ image, flip }) {
+export default function Content({ image, flip }) {
   const matches = useMediaQuery("(min-width: 768px)");
   const flippedRow = flip ? "row-reverse" : "row";
 
