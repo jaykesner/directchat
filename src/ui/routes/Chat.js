@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import { chatRoomQuery } from "../../api/firebase";
@@ -15,23 +15,38 @@ export default function Chat() {
   const { id } = useParams();
   const history = useHistory();
   const [chatRoom] = useCollection(chatRoomQuery(id));
+  const [chatRoomExists, setChatRoomExists] = useState(false);
   const [name, setName] = useState(sessionStorage.getItem("name"));
 
   useScrollLock(true);
 
+  useEffect(() => {
+    if (chatRoom) {
+      if (chatRoom.data()) {
+        setChatRoomExists(true);
+      } else {
+        history.push(`/`);
+      }
+    }
+  }, [chatRoom, history]);
+
   return (
     <>
-      <NameModal name={name} setName={setName} />
-      <Group direction="column" spacing="xl" position="center">
-        <Title id={id} history={history} />
-        <Container style={{ width: "100%" }}>
-          <Messages id={id} />
-        </Container>
-        <Container style={{ width: "100%" }}>
-          <NewMessage id={id} name={name} />
-          <TypingIndicator chatRoom={chatRoom} />
-        </Container>
-      </Group>
+      {chatRoomExists && (
+        <>
+          <NameModal name={name} setName={setName} />
+          <Group direction="column" spacing="xl" position="center">
+            <Title id={id} history={history} />
+            <Container style={{ width: "100%" }}>
+              <Messages id={id} />
+            </Container>
+            <Container style={{ width: "100%" }}>
+              <NewMessage id={id} name={name} />
+              <TypingIndicator chatRoom={chatRoom} />
+            </Container>
+          </Group>
+        </>
+      )}
     </>
   );
 }

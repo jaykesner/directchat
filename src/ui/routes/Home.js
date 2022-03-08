@@ -42,10 +42,21 @@ export default function Home() {
         </Container>
       </Center>
       <Center className={classes.info}>
-        <Content image={svg1} />
+        <Container>
+          <Content
+            image={svg1}
+            textTitle="Chat with React and Firebase"
+            textContent="Firebase provides a fast cloud database for messaging and chat room features, updated using state in React."
+          />
+        </Container>
       </Center>
       <Center className={classes.info2}>
-        <Content image={svg3} flip />
+        <Content
+          image={svg3}
+          flip
+          textTitle="No sign in, shareable URL"
+          textContent="Create or join a chat room using five digit chat rooms, using any name you want."
+        />
       </Center>
       <Center className={classes.footer} />
     </>
