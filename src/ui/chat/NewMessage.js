@@ -4,16 +4,21 @@ import { TextInput } from "@mantine/core";
 
 export default function NewMessage({ id, name }) {
   const [message, setMessage] = useState("");
+  const [wasTyping, setWasTyping] = useState(false);
 
   useEffect(() => {
     if (name) {
-      if (message.length > 0) {
+      if (message.length > 0 && !wasTyping) {
         setTyping(name, id, true);
-      } else {
+        setWasTyping(true);
+      }
+
+      if (message.length === 0 && wasTyping) {
         setTyping(name, id, false);
+        setWasTyping(false);
       }
     }
-  });
+  }, [name, message, id, wasTyping]);
 
   const sendNewMessage = async (e) => {
     e.preventDefault();
