@@ -8,19 +8,20 @@ const useStyles = createStyles((theme) => ({
   landing: {
     height: "738px",
   },
-  info: {
+  chatInfo: {
     backgroundColor:
       theme.colorScheme === "dark"
         ? theme.colors.dark[5]
         : theme.colors.gray[3],
-    height: "378px",
+    height: "432px",
+    width: "100%",
   },
-  info2: {
+  appInfo: {
     backgroundColor:
       theme.colorScheme === "dark"
         ? theme.colors.dark[4]
         : theme.colors.gray[4],
-    height: "378px",
+    height: "432px",
   },
   footer: {
     backgroundColor:
@@ -41,7 +42,7 @@ export default function Home() {
           <Navigation />
         </Container>
       </Center>
-      <Center className={classes.info}>
+      <Center className={classes.chatInfo}>
         <Container>
           <Content
             image={svg1}
@@ -50,12 +51,12 @@ export default function Home() {
           />
         </Container>
       </Center>
-      <Center className={classes.info2}>
+      <Center className={classes.appInfo}>
         <Content
           image={svg3}
           flip
           textTitle="No sign in, shareable URL"
-          textContent="Create or join a chat room using five digit chat rooms, using any name you want."
+          textContent="Create or join a chat room with five digit chat rooms, using any display name you want."
         />
       </Center>
       <Center className={classes.footer} />

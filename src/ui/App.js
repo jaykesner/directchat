@@ -16,6 +16,12 @@ export default function App() {
       theme={{
         colorScheme: "light",
         /*
+        headings: {
+          fontFamily: "Georgia",
+        },
+        fontFamily: "Georgia",
+        */
+        /*
         colors: {
           dark: [
             "#d5d7e0",

@@ -73,7 +73,7 @@ export default function Navigation() {
             rightSection={
               <UnstyledButton
                 onClick={() => joinChatById()}
-                sx={{ paddingRight: "16px" }}
+                sx={{ paddingRight: "18px" }}
               >
                 <ThemeIcon size="xl" radius="xl">
                   <EnterIcon />
