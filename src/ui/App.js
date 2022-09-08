@@ -1,42 +1,38 @@
 import { Global, MantineProvider } from "@mantine/core";
+import { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Chat from "./routes/Chat";
 import Home from "./routes/Home";
+import { lightTheme, darkTheme, darkTheme2 } from "./themes";
 
 export default function App() {
+  const [theme, setTheme] = useState();
+
+  const selectTheme = (name) => {
+    switch (name) {
+      case "light":
+        setTheme(lightTheme);
+        break;
+      case "dark":
+        setTheme(darkTheme);
+        break;
+      case "dark2":
+        setTheme(darkTheme2);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <MantineProvider
+      theme={theme}
       styles={{
         Title: (theme) => ({
           root: {
             color: theme.colorScheme === "dark" ? theme.white : theme.black,
           },
         }),
-      }}
-      theme={{
-        colorScheme: "light",
-        /*
-        headings: {
-          fontFamily: "Georgia",
-        },
-        fontFamily: "Georgia",
-        */
-        /*
-        colors: {
-          dark: [
-            "#d5d7e0",
-            "#acaebf",
-            "#8c8fa3",
-            "#666980",
-            "#4d4f66",
-            "#34354a",
-            "#2b2c3d",
-            "#1d1e30",
-            "#0c0d21",
-            "#01010a",
-          ],
-        },
-        */
       }}
       withNormalizeCSS
       withGlobalStyles
@@ -65,7 +61,7 @@ export default function App() {
             <Chat />
           </Route>
           <Route path="/">
-            <Home />
+            <Home selectTheme={selectTheme} />
           </Route>
         </Switch>
       </Router>

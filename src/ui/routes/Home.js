@@ -32,14 +32,14 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function Home() {
+export default function Home({ selectTheme }) {
   const { classes } = useStyles();
 
   return (
     <>
       <Center className={classes.landing}>
         <Container>
-          <Navigation />
+          <Navigation selectTheme={selectTheme} />
         </Container>
       </Center>
       <Center className={classes.chatInfo}>

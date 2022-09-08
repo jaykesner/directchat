@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { newChat, joinChat, randomChat } from "../../api/firebase";
 import {
@@ -9,12 +9,19 @@ import {
   Button,
   UnstyledButton,
   ThemeIcon,
+  RadioGroup,
+  Radio,
 } from "@mantine/core";
 import { ReactComponent as EnterIcon } from "../../images/enter-icon.svg";
 
-export default function Navigation() {
+export default function Navigation({ selectTheme }) {
   let history = useHistory();
   const [roomId, setRoomId] = useState("");
+  const [theme, setTheme] = useState("");
+
+  useEffect(() => {
+    selectTheme(theme);
+  });
 
   const addNewChat = async () => {
     const chatId = await newChat();
@@ -22,20 +29,10 @@ export default function Navigation() {
     history.push(`/${chatId}`);
   };
 
-  const joinChatById = async () => {
-    if (roomId) {
-      const chatRoom = await joinChat(roomId);
-      if (chatRoom) {
-        history.push(`/${roomId}`);
-      }
-      console.log(chatRoom);
-    } else {
-      return;
+  const joinChatById = async (event) => {
+    if (event) {
+      event.preventDefault();
     }
-  };
-
-  const joinChatById2 = async (event) => {
-    event.preventDefault();
     if (roomId) {
       const chatRoom = await joinChat(roomId);
       if (chatRoom) {
@@ -62,7 +59,7 @@ export default function Navigation() {
     <Paper padding="xl" shadow="lg" radius="lg" withBorder>
       <Group direction="column" position="center">
         <Title sx={{ fontSize: 48 }}>Direct Chat</Title>
-        <form onSubmit={(e) => joinChatById2(e)} autoComplete="off">
+        <form onSubmit={(e) => joinChatById(e)} autoComplete="off">
           <TextInput
             placeholder="XY1B2"
             label="Room ID"
@@ -96,6 +93,11 @@ export default function Navigation() {
             Random
           </Button>
         </Group>
+        <RadioGroup value={theme} onChange={setTheme}>
+          <Radio value="light">Light</Radio>
+          <Radio value="dark">Dark</Radio>
+          <Radio value="dark2">Dark 2</Radio>
+        </RadioGroup>
       </Group>
     </Paper>
   );
