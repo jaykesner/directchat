@@ -1,4 +1,4 @@
-import { Group, TextInput, Button, Modal } from "@mantine/core";
+import { Stack, TextInput, Button, Modal } from "@mantine/core";
 import { useState, useEffect } from "react";
 
 export default function NameModal({ name, setName }) {
@@ -28,11 +28,11 @@ export default function NameModal({ name, setName }) {
     <Modal
       opened={modalOpen}
       onClose={() => setModalOpened(false)}
-      hideCloseButton
+      withCloseButton={false}
       centered
     >
       <form onSubmit={(e) => submitNameForm(e)} autoComplete="off">
-        <Group direction="column" grow>
+        <Stack grow>
           <TextInput
             data-autofocus
             placeholder="Your name"
@@ -46,7 +46,7 @@ export default function NameModal({ name, setName }) {
           <Button type="submit" radius="xl" size="lg">
             Join {nameInput ? `as ${nameInput}` : null}
           </Button>
-        </Group>
+        </Stack>
       </form>
     </Modal>
   );

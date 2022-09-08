@@ -1,27 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { newChat, joinChat, randomChat } from "../../api/firebase";
 import {
   Paper,
   Group,
+  Stack,
   Title,
   TextInput,
   Button,
   UnstyledButton,
   ThemeIcon,
-  RadioGroup,
   Radio,
 } from "@mantine/core";
 import { ReactComponent as EnterIcon } from "../../images/enter-icon.svg";
 
-export default function Navigation({ selectTheme }) {
+export default function Navigation({ selectTheme, themeStyle }) {
   let history = useHistory();
   const [roomId, setRoomId] = useState("");
-  const [theme, setTheme] = useState("");
-
-  useEffect(() => {
-    selectTheme(theme);
-  });
 
   const addNewChat = async () => {
     const chatId = await newChat();
@@ -56,8 +51,8 @@ export default function Navigation({ selectTheme }) {
     }
   };
   return (
-    <Paper padding="xl" shadow="lg" radius="lg" withBorder>
-      <Group direction="column" position="center">
+    <Paper p="xl" shadow="lg" radius="lg" withBorder>
+      <Stack align="center">
         <Title sx={{ fontSize: 48 }}>Direct Chat</Title>
         <form onSubmit={(e) => joinChatById(e)} autoComplete="off">
           <TextInput
@@ -93,12 +88,13 @@ export default function Navigation({ selectTheme }) {
             Random
           </Button>
         </Group>
-        <RadioGroup value={theme} onChange={setTheme}>
-          <Radio value="light">Light</Radio>
-          <Radio value="dark">Dark</Radio>
-          <Radio value="dark2">Dark 2</Radio>
-        </RadioGroup>
-      </Group>
+
+        <Radio.Group value={themeStyle} onChange={selectTheme}>
+          <Radio value="light" label="Light" />
+          <Radio value="dark" label="Dark" />
+          <Radio value="dark2" label="Dark2" />
+        </Radio.Group>
+      </Stack>
     </Paper>
   );
 }

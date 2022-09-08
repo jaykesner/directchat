@@ -28,7 +28,7 @@ export default function Messages({ id }) {
   };
 
   return (
-    <Paper padding="sm" shadow="lg" radius="lg">
+    <Paper p="sm" shadow="lg" radius="lg">
       <ScrollArea sx={{ height: 380 }} offsetScrollbars viewportRef={viewport}>
         <Group direction="column">
           {messagesLoading && <MessageSkeleton amount={3} />}
