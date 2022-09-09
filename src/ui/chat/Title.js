@@ -1,12 +1,12 @@
-import { Group, Title as MantineTitle, Button } from "@mantine/core";
+import { Stack, Title as MantineTitle, Button } from "@mantine/core";
 
 export default function Title({ id, history }) {
   return (
-    <Group direction="column" position="center">
+    <Stack direction="column" align="center">
       <MantineTitle sx={{ fontSize: 64 }}>{id}</MantineTitle>
       <Button onClick={() => history.push("/")} radius="xl" size="lg">
         Leave
       </Button>
-    </Group>
+    </Stack>
   );
 }

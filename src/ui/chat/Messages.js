@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { chatMessagesQuery } from "../../api/firebase";
 import MessageSkeleton from "./MessageSkeleton";
-import { Paper, ScrollArea, Group, Text, Skeleton } from "@mantine/core";
+import { Paper, ScrollArea, Group, Stack, Text, Skeleton } from "@mantine/core";
 
 export default function Messages({ id }) {
   const viewport = useRef(null);
@@ -30,11 +30,11 @@ export default function Messages({ id }) {
   return (
     <Paper p="sm" shadow="lg" radius="lg">
       <ScrollArea sx={{ height: 380 }} offsetScrollbars viewportRef={viewport}>
-        <Group direction="column">
+        <Stack>
           {messagesLoading && <MessageSkeleton amount={3} />}
           {messages &&
             messages.docs.map((doc) => (
-              <Group direction="column" spacing={0} key={doc.id}>
+              <Stack spacing={0} key={doc.id}>
                 <Group spacing="xs">
                   <Text weight={700}>
                     {doc.data().name ? doc.data().name : "NoName"}
@@ -48,9 +48,9 @@ export default function Messages({ id }) {
                   </Text>
                 </Group>
                 <Text>{doc.data().text}</Text>
-              </Group>
+              </Stack>
             ))}
-        </Group>
+        </Stack>
       </ScrollArea>
     </Paper>
   );

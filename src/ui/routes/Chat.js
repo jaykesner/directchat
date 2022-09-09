@@ -8,7 +8,7 @@ import Title from "../chat/Title";
 import Messages from "../chat/Messages";
 import NewMessage from "../chat/NewMessage";
 import TypingIndicator from "../chat/TypingIndicator";
-import { Group, Container } from "@mantine/core";
+import { Container, Stack } from "@mantine/core";
 import { useScrollLock } from "@mantine/hooks";
 
 export default function Chat() {
@@ -35,7 +35,7 @@ export default function Chat() {
       {chatRoomExists && (
         <>
           <NameModal name={name} setName={setName} />
-          <Group direction="column" spacing="xl" position="center">
+          <Stack spacing="xl" align="center" justify="center">
             <Title id={id} history={history} />
             <Container style={{ width: "100%" }}>
               <Messages id={id} />
@@ -44,7 +44,7 @@ export default function Chat() {
               <NewMessage id={id} name={name} />
               <TypingIndicator chatRoom={chatRoom} />
             </Container>
-          </Group>
+          </Stack>
         </>
       )}
     </>
