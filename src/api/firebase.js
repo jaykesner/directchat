@@ -79,6 +79,20 @@ export const newChat = () => {
   });
 };
 
+export const deleteChat = (id) => {
+  return new Promise((resolve, reject) => {
+    db.collection("chats")
+      .doc(id)
+      .delete()
+      .then(() => {
+        resolve(id);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 export const sendMessage = (messageInfo) => {
   const { message, roomId, name } = messageInfo;
   return new Promise((resolve, reject) => {

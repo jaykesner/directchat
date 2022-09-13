@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { newChat, joinChat, randomChat } from "../../api/firebase";
+import { newChat, joinChat, randomChat, deleteChat } from "../../api/firebase";
 import {
   Paper,
   Group,
@@ -50,6 +50,15 @@ export default function Navigation({ selectTheme, themeStyle }) {
       history.push(`/${chatId}`);
     }
   };
+
+  const deleteRandomChat = async () => {
+    const randomChatId = await randomChat();
+    console.log(`trying to delete ${randomChatId}`);
+    if (randomChatId) {
+      const deletedChat = await deleteChat(randomChatId);
+      console.log(`[client] deleted ${deletedChat}`);
+    }
+  };
   return (
     <Paper p="xl" shadow="lg" radius="lg" withBorder>
       <Stack align="center">
@@ -64,7 +73,7 @@ export default function Navigation({ selectTheme, themeStyle }) {
             onChange={(event) => setRoomId(event.target.value)}
             rightSection={
               <UnstyledButton
-                onClick={() => joinChatById()}
+                onClick={joinChatById}
                 sx={{ paddingRight: "18px" }}
               >
                 <ThemeIcon size="xl" radius="xl">
@@ -75,11 +84,11 @@ export default function Navigation({ selectTheme, themeStyle }) {
           />
         </form>
         <Group>
-          <Button size="xl" radius="xl" onClick={() => addNewChat()}>
+          <Button size="xl" radius="xl" onClick={addNewChat}>
             New
           </Button>
           <Button
-            onClick={() => joinRandomChat()}
+            onClick={joinRandomChat}
             variant="gradient"
             size="xl"
             radius="xl"
@@ -88,12 +97,12 @@ export default function Navigation({ selectTheme, themeStyle }) {
             Random
           </Button>
         </Group>
-
         <Radio.Group value={themeStyle} onChange={selectTheme}>
           <Radio value="light" label="Light" />
           <Radio value="dark" label="Dark" />
           <Radio value="dark2" label="Dark2" />
         </Radio.Group>
+        <Button onClick={deleteRandomChat}>Delete</Button>
       </Stack>
     </Paper>
   );
