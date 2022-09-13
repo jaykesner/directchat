@@ -36,36 +36,7 @@ export default function App() {
   };
 
   return (
-    <MantineProvider
-      theme={theme}
-      styles={{
-        Title: (theme) => ({
-          root: {
-            color: theme.colorScheme === "dark" ? theme.white : theme.black,
-          },
-        }),
-      }}
-      withNormalizeCSS
-      withGlobalStyles
-    >
-      <Global
-        styles={(theme) => ({
-          "*, *::before, *::after": {
-            boxSizing: "border-box",
-          },
-
-          body: {
-            ...theme.fn.fontStyles(),
-            backgroundColor:
-              theme.colorScheme === "dark"
-                ? theme.colors.dark[8]
-                : theme.colors.gray[2],
-            color:
-              theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
-            lineHeight: theme.lineHeight,
-          },
-        })}
-      />
+    <MantineProvider theme={theme} withNormalizeCSS withGlobalStyles>
       <Router>
         <Switch>
           <Route path="/:id">
