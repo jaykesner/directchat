@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { newChat, joinChat, randomChat, deleteChat } from "../../api/firebase";
+import {
+  newChat,
+  joinChat,
+  randomChat,
+  deleteChat,
+  deleteMessages,
+} from "../../api/firebase";
 import {
   Paper,
   Group,
@@ -40,10 +46,17 @@ export default function Navigation({ selectTheme, themeStyle }) {
   };
 
   const joinRandomChat = async () => {
-    const randomChatId = await randomChat();
-    if (randomChatId) {
-      console.log(randomChatId);
-      history.push(`/${randomChatId}`);
+    //const randomToDelete = await randomChat();
+    //console.log(randomToDelete);
+
+    // delete random chat
+    await deleteRandomChat();
+
+    // join random chat, or create new if none exist
+    const randomChatToJoin = await randomChat();
+    if (randomChatToJoin) {
+      console.log(`joining random chat ${randomChatToJoin}`);
+      history.push(`/${randomChatToJoin}`);
     } else {
       console.log("no chat rooms exist for random chat");
       const chatId = await newChat();
@@ -52,13 +65,23 @@ export default function Navigation({ selectTheme, themeStyle }) {
   };
 
   const deleteRandomChat = async () => {
-    const randomChatId = await randomChat();
-    console.log(`trying to delete ${randomChatId}`);
-    if (randomChatId) {
-      const deletedChat = await deleteChat(randomChatId);
-      console.log(`[client] deleted ${deletedChat}`);
+    const randomChatToDelete = await randomChat();
+    //console.log(`trying to delete ${randomChatToDelete}`);
+    // todo: check date on client before trying to delete
+    if (randomChatToDelete) {
+      try {
+        const deletedChat = await deleteChat(randomChatToDelete);
+        console.log(`deleted ${deletedChat}`);
+        if (deletedChat) {
+          await deleteMessages(deletedChat);
+          console.log(`deleted messages from ${deletedChat}`);
+        }
+      } catch (e) {
+        console.log(`no delete needed on chat ${randomChatToDelete}`);
+      }
     }
   };
+
   return (
     <Paper p="xl" shadow="lg" radius="lg" withBorder>
       <Stack align="center">
@@ -102,7 +125,7 @@ export default function Navigation({ selectTheme, themeStyle }) {
           <Radio value="dark" label="Dark" />
           <Radio value="dark2" label="Dark2" />
         </Radio.Group>
-        <Button onClick={deleteRandomChat}>Delete</Button>
+        <Button>Test Button</Button>
       </Stack>
     </Paper>
   );

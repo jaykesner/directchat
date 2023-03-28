@@ -85,9 +85,33 @@ export const deleteChat = (id) => {
       .doc(id)
       .delete()
       .then(() => {
+        console.log(`deleted chat ${id}`);
         resolve(id);
       })
       .catch((error) => {
+        if (error.code === "permission-denied") {
+          reject("rejected by permissions");
+        } else {
+          reject("other rejection");
+        }
+      });
+  });
+};
+
+export const deleteMessages = (id) => {
+  return new Promise((resolve, reject) => {
+    db.collection("messages")
+      .where("chatId", "==", id)
+      .get()
+      .then((docs) => {
+        docs.forEach((doc) => {
+          doc.ref.delete();
+        });
+        console.log("deleted messages");
+        resolve("deleted messages by id");
+      })
+      .catch((error) => {
+        console.log("error deleting messages by id");
         reject(error);
       });
   });
