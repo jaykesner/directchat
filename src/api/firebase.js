@@ -68,6 +68,7 @@ export const newChat = () => {
       .doc(newChatId)
       .set({
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
         resolve(newChatId);
@@ -135,6 +136,12 @@ export const sendMessage = (messageInfo) => {
         console.log("error sending new message");
         reject(error);
       });
+  });
+};
+
+export const updateLastMessage = (id) => {
+  db.collection("chats").doc(id).update({
+    lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
   });
 };
 

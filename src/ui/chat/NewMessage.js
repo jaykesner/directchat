@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { sendMessage, setTyping } from "../../api/firebase";
+import { sendMessage, setTyping, updateLastMessage } from "../../api/firebase";
 import { TextInput } from "@mantine/core";
 
 export default function NewMessage({ id, name }) {
@@ -29,6 +29,7 @@ export default function NewMessage({ id, name }) {
         name: name,
       };
       await sendMessage(messageInfo);
+      updateLastMessage(id);
     }
     setMessage("");
   };
